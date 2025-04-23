@@ -10,8 +10,7 @@
 #define SORTEAR_COLUNA() (int)(rand()%COL-1)
 
 void gerarGrid(int porcentagemObstaculos);
-void salvarGridNoTxt(char grid[LIN][COL]);
-void imprimirGrid(char grid[LIN][COL]);
+void salvarGridNoTxt(char *matriz, const char *nomeDoArquivo);
 
 int main() {
     srand(time(0));
@@ -29,34 +28,43 @@ int main() {
 
 void gerarGrid(int porcentagemObstaculos) {
     char grid[LIN][COL] = {{' '}};
+
     for (int l = 0 ; l < LIN ; l++) {
-      for (int c = 0 ; c < COL ; c++) {
-        grid[l][c] = ' ';
-      }
+        for (int c = 0 ; c < COL ; c++) {
+            grid[l][c] = ' '; // preenche todos os espaços com ' '
+        }
     }
-    int qntdObstaculos = (LIN*COL) * ((float)porcentagemObstaculos / 100);
-    for (qntdObstaculos ; qntdObstaculos>0 ; qntdObstaculos--) {
+
+    grid[SORTEAR_LINHA()][0] = 'A';       // define inicio
+    grid[SORTEAR_LINHA()][COL - 1] = 'B'; // define o fim
+
+    int qntdObstaculos = (LIN * COL) * ((float)porcentagemObstaculos / 100);
+    for (qntdObstaculos; qntdObstaculos > 0; qntdObstaculos--)
+    {
         int linha;
         int coluna;
         do {
             linha = SORTEAR_LINHA();
             coluna = SORTEAR_COLUNA();
-        } while (grid[linha][coluna] == 'x');
+        } while (grid[linha][coluna] != ' ');
         grid[linha][coluna] = 'x';
     }
-    imprimirGrid(grid);
+    salvarGridNoTxt(&grid[0][0], "grid.txt");
 }
 
-void salvarGridNoTxt(char grid[LIN][COL]);
-
-void imprimirGrid(char grid[LIN][COL])
-{
-  for (int i = 0; i < LIN; i++)
-  {
-    for (int j = 0; j < COL; j++)
-    {
-      printf("%c", grid[i][j]);
+void salvarGridNoTxt(char *grid, const char *nomeDoArquivo) {
+    FILE *file = fopen(nomeDoArquivo, "w");
+    if (file == NULL) {
+        perror("Erro ao abrir o arquivo para escrita");
+        return;
     }
-    printf("\n");
-  }
+
+    for (int l = 0; l < LIN; l++) {
+        for (int c = 0; c < COL; c++) {
+            fputc(*(grid + l * COL + c), file);
+        }
+        fputc('\n', file);
+    }
+
+    fclose(file);
 }
