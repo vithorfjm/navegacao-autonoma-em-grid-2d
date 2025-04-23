@@ -11,6 +11,7 @@
 
 void gerarGrid(int porcentagemObstaculos);
 void salvarGridNoTxt(char *matriz, const char *nomeDoArquivo);
+void lerGridDoTxt(char * matrix, const char *nomeDoArquivo);
 
 int main() {
     srand(time(0));
@@ -24,6 +25,9 @@ int main() {
     puts("Gerando o mapa...");
     // Sleep(3000);
     gerarGrid(porcentagem);
+    char matriz[LIN][COL];
+    lerGridDoTxt(&matriz[0][0], "grid.txt");
+    // aq vai o algoritmo de resolução
 }
 
 void gerarGrid(int porcentagemObstaculos) {
@@ -64,6 +68,29 @@ void salvarGridNoTxt(char *grid, const char *nomeDoArquivo) {
             fputc(*(grid + l * COL + c), file);
         }
         fputc('\n', file);
+    }
+
+    fclose(file);
+}
+
+void lerGridDoTxt(char * matrix, const char *nomeDoArquivo) {
+    FILE *file = fopen(nomeDoArquivo, "r");
+    if (file == NULL) {
+        printf("Erro ao abrir o arquivo");
+        return;
+    }
+
+    static char linha[1024];
+    int l = 0;
+
+    while (fgets(linha, sizeof(linha), file) && l < LIN) {
+        int c = 0;
+        char * pos = linha;
+        while (*pos != '\n' && c < COL) {
+            *(matrix + l*COL + c) = *pos++;
+            c++;
+        }
+        l++;
     }
 
     fclose(file);
