@@ -14,10 +14,6 @@ void salvarGridNoTxt(char *grid, const char *nomeDoArquivo);
 void lerGridDoTxt(char * grid, const char *nomeDoArquivo);
 void bfs(int sx, int sy, char grid[LIN][COL]);
 int dentroDoMapa(int x, int y);
-int visitado[LIN][COL];
-int pai[LIN][COL][2];
-int dx[] = {-1, 1, 0, 0};
-int dy[] = {0, 0, -1, 1};
 
 int main() {
     srand(time(0));
@@ -122,7 +118,10 @@ void lerGridDoTxt(char * grid, const char *nomeDoArquivo) {
 void bfs(int sx, int sy, char grid[LIN][COL]) {
     int fila[LIN * COL][2];
     int frente = 0, tras = 0;
-
+    int visitado[LIN][COL];
+    int pai[LIN][COL][2];
+    int dx[] = {-1, 1, 0, 0};
+    int dy[] = {0, 0, -1, 1};
     fila[tras][0] = sx;
     fila[tras][1] = sy;
     tras++;
@@ -138,7 +137,7 @@ void bfs(int sx, int sy, char grid[LIN][COL]) {
         frente++;
         if (grid[x][y] == 'B')
         {
-            printf("Cheguei no fim em (%d, %d)!\n", x, y);
+            printf("Cheguei no ponto 'B' em (%d, %d)!\n", x, y);
             while (pai[x][y][0] != -1)
             {
                 int px = pai[x][y][0];
@@ -170,8 +169,7 @@ void bfs(int sx, int sy, char grid[LIN][COL]) {
         }
     }
     
-
-    printf("Nao foi possivel encontrar um caminho ate o 'B'.\n");
+    printf("Nao foi possivel encontrar um caminho do ponto 'A' ao ponto 'B'.\n");
 }
 
 int dentroDoMapa(int x, int y) {
